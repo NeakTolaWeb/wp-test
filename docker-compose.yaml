@@ -37,7 +37,7 @@ services:
     phpmyadmin:
         image: phpmyadmin:latest
         ports:
-          - "8080:80"
+          - "8090:90"
         environment:
           - PMA_HOST=mysql
           - PMA_USER=$SERVICE_USER_WORDPRESS
