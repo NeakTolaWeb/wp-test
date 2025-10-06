@@ -39,13 +39,11 @@ services:
         ports:
           - "8090:90"
         environment:
-          - PMA_HOST=mysql
-          - PMA_USER=$SERVICE_USER_WORDPRESS
-          - PMA_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
+          - PMA_ARBITRARY=1
         depends_on:
           - mysql
         healthcheck:
-          test: ["CMD", "curl", "-f", "http://localhost"]
+          test: ["CMD", "curl", "-f", "http://127.0.0.1"]
           interval: 5s
           timeout: 10s
           retries: 5
