@@ -35,13 +35,18 @@ services:
             timeout: 20s
             retries: 10
     phpmyadmin:
-    image: phpmyadmin:latest
-    ports:
-      - "8080:80" # Access phpMyAdmin via http://localhost:8080
-    environment:
-      - PMA_HOST=mysql
-      - PMA_USER=$SERVICE_USER_WORDPRESS
-      - PMA_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
-    depends_on:
-      - mysql
+        image: phpmyadmin:latest
+        ports:
+          - "8080:80"
+        environment:
+          - PMA_HOST=mysql
+          - PMA_USER=$SERVICE_USER_WORDPRESS
+          - PMA_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
+        depends_on:
+          - mysql
+        healthcheck:
+          test: ["CMD", "curl", "-f", "http://localhost"]
+          interval: 5s
+          timeout: 10s
+          retries: 5
 
