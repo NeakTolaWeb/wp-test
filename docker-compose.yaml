@@ -5,7 +5,7 @@ services:
     build:
       context: ./wordpress
       dockerfile: Dockerfile
-    image: wordpress:latest
+    image: youloy/wordpress:latest
     volumes:
       #- ./wordpress:/var/www/html # WordPress (wordpress-files:/var/www/html) or Using WordPress Multisite with Coolify (./wordpress:/var/www/html)
       #- ./themes/youloy/:/var/www/html/wp-content/themes/youloy # Theme development
@@ -43,19 +43,6 @@ services:
       interval: 5s
       timeout: 20s
       retries: 10
-
-  phpmyadmin:
-    image: phpmyadmin:latest
-    environment:
-      - PMA_HOST=mysql
-      - PMA_USER=$SERVICE_USER_WORDPRESS
-      - PMA_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
-    depends_on:
-      - mysql
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1"]
-      interval: 5s
-      timeout: 10s
 
   memcached:
     image: memcached:1.6-alpine
