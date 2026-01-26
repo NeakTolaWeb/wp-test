@@ -3,7 +3,6 @@ version: "3.8"
 services:
   wordpress:
     build:
-      context: ./wordpress
       dockerfile: Dockerfile
     image: wordpress:latest
     volumes:
