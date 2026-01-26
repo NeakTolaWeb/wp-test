@@ -1,49 +1,57 @@
+version: "3.8"
+
 services:
-    wordpress:
-        image: wordpress:latest
-        volumes:
-            #- ./wordpress:/var/www/html # WordPress (wordpress-files:/var/www/html) or Using WordPress Multisite with Coolify (./wordpress:/var/www/html)
-            #- ./themes/wikiasias/:/var/www/html/wp-content/themes/wikiasias # Theme development
-            #- ./theme-child/wikiasias-child/:/var/www/html/wp-content/themes/wikiasias-child # Theme child development
-            #- ./plugins/wikiasias-core/:/var/www/html/wp-content/plugins/wikiasias-core # Plugin development
-            - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-        environment:
-            - SERVICE_URL_WORDPRESS
-            - WORDPRESS_DB_HOST=mysql
-            - WORDPRESS_DB_USER=$SERVICE_USER_WORDPRESS
-            - WORDPRESS_DB_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
-            - WORDPRESS_DB_NAME=wordpress
-        depends_on:
-            - mysql
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://127.0.0.1"]
-            interval: 2s
-            timeout: 10s
-            retries: 10
-    mysql:
-        image: mysql:8
-        volumes:
-            - mysql-data:/var/lib/mysql
-        environment:
-            - MYSQL_ROOT_PASSWORD=$SERVICE_PASSWORD_ROOT
-            - MYSQL_DATABASE=wordpress
-            - MYSQL_USER=$SERVICE_USER_WORDPRESS
-            - MYSQL_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
-        healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
-            interval: 5s
-            timeout: 20s
-            retries: 10
-    phpmyadmin:
-        image: phpmyadmin:latest
-        environment:
-          - PMA_HOST=mysql
-          - PMA_USER=$SERVICE_USER_WORDPRESS
-          - PMA_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
-        depends_on:
-          - mysql
-        healthcheck:
-          test: ["CMD", "curl", "-f", "http://127.0.0.1"]
-          interval: 5s
-          timeout: 10s
-          retries: 5
+  wordpress:
+    build:
+      context: ./wordpress
+      dockerfile: Dockerfile
+    image: youloy/wordpress:latest
+    volumes:
+      #- ./wordpress:/var/www/html # WordPress (wordpress-files:/var/www/html) or Using WordPress Multisite with Coolify (./wordpress:/var/www/html)
+      #- ./themes/youloy/:/var/www/html/wp-content/themes/youloy # Theme development
+      #- ./theme-child/youloy-child/:/var/www/html/wp-content/themes/youloy-child # Theme child development
+      #- ./plugins/youloy-core/:/var/www/html/wp-content/plugins/youloy-core # Plugin development
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    environment:
+      - SERVICE_URL_WORDPRESS
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_USER=$SERVICE_USER_WORDPRESS
+      - WORDPRESS_DB_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
+      - WORDPRESS_DB_NAME=wordpress
+    depends_on:
+      - mysql
+      - memcached
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1"]
+      interval: 2s
+      timeout: 10s
+      retries: 10
+    ports:
+      - "8000:80"
+
+  mysql:
+    image: mysql:8
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=$SERVICE_PASSWORD_ROOT
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=$SERVICE_USER_WORDPRESS
+      - MYSQL_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+  memcached:
+    image: memcached:1.6-alpine
+    command: ["-m", "64"]
+    healthcheck:
+      test: ["CMD", "echo", "version", "|", "nc", "-vz", "127.0.0.1", "11211"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql-data:
