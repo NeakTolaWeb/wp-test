@@ -45,17 +45,17 @@ services:
       retries: 10
 
   phpmyadmin:
-        image: phpmyadmin:latest
-        environment:
-          - PMA_HOST=mysql
-          - PMA_USER=$SERVICE_USER_WORDPRESS
-          - PMA_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
-        depends_on:
-          - mysql
-        healthcheck:
-          test: ["CMD", "curl", "-f", "http://127.0.0.1"]
-          interval: 5s
-          timeout: 10s
+    image: phpmyadmin:latest
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=$SERVICE_USER_WORDPRESS
+      - PMA_PASSWORD=$SERVICE_PASSWORD_WORDPRESS
+    depends_on:
+      - mysql
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1"]
+      interval: 5s
+      timeout: 10s
 
   memcached:
     image: memcached:1.6-alpine
