@@ -2,9 +2,6 @@ version: "3.8"
 
 services:
   wordpress:
-    build:
-      context: ./wordpress
-      dockerfile: Dockerfile
     image: youloy/wordpress:latest
     volumes:
       #- ./wordpress:/var/www/html # WordPress (wordpress-files:/var/www/html) or Using WordPress Multisite with Coolify (./wordpress:/var/www/html)
