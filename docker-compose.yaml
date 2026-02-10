@@ -2,7 +2,7 @@ services:
   wordpress:
     image: wordpress:latest
     volumes:
-      #- ./wordpress:/var/www/html # WordPress (wordpress-files:/var/www/html) or Using WordPress Multisite with Coolify (./wordpress:/var/www/html)
+      - ./wordpress:/var/www/html # WordPress (wordpress-files:/var/www/html) or Using WordPress Multisite with Coolify (./wordpress:/var/www/html)
       #- ./themes/youloy/:/var/www/html/wp-content/themes/youloy # Theme development
       #- ./theme-child/youloy-child/:/var/www/html/wp-content/themes/youloy-child # Theme child development
       #- ./plugins/youloy-core/:/var/www/html/wp-content/plugins/youloy-core # Plugin development
